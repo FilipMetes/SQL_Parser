@@ -11,20 +11,27 @@ public class GUI1 extends Application {
     @Override
     public void start(Stage primaryStage) {
         // Multi-line editable text area
-        TextArea textArea = new TextArea();
-        textArea.setPromptText("Type your text here...");
-        textArea.setWrapText(true); // wraps lines
+        TextArea host = this.createTextArea("Host");
+        TextArea port = this.createTextArea("Port");
+        TextArea sid = this.createTextArea("Sid");
+        TextArea user = this.createTextArea("User");
+        TextArea password = this.createTextArea("Password");
+
 
         // Button to read user input
         Button submitButton = new Button("Submit");
         submitButton.setOnAction(e -> {
-            String userInput = textArea.getText();
-            Connect connect = new Connect("obelix.fri.uniza.sk" , "1521", "orcl", "metes", "Hulkcica17");
+            String userHost = host.getText();
+            String userPort = port.getText();
+            String userSid = sid.getText();
+            String userUser = user.getText();
+            String userPassword = password.getText();
+            Connect connect = new Connect(userHost, userPort, userSid, userUser, userPassword);
         });
 
         // Layout container
         VBox root = new VBox(10); // 10px spacing
-        root.getChildren().addAll(textArea, submitButton);
+        root.getChildren().addAll(host, port, sid, user, password, submitButton);
 
         // Scene and stage setup
         Scene scene = new Scene(root, 400, 300);
@@ -32,5 +39,15 @@ public class GUI1 extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+
+    public TextArea createTextArea(String text) {
+        TextArea textArea = new TextArea();
+        textArea.setPromptText(text);
+        textArea.setWrapText(true);
+
+        return textArea;
+    }
+
 }
+
 
