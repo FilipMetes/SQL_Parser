@@ -1,0 +1,12 @@
+metesdb_high = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.eu-frankfurt-1.oraclecloud.com))(connect_data=(service_name=gc48432532c9ef8_metesdb_high.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+metesdb_low = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.eu-frankfurt-1.oraclecloud.com))(connect_data=(service_name=gc48432532c9ef8_metesdb_low.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+metesdb_medium = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.eu-frankfurt-1.oraclecloud.com))(connect_data=(service_name=gc48432532c9ef8_metesdb_medium.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+metesdb_tp = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.eu-frankfurt-1.oraclecloud.com))(connect_data=(service_name=gc48432532c9ef8_metesdb_tp.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+metesdb_tpurgent = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.eu-frankfurt-1.oraclecloud.com))(connect_data=(service_name=gc48432532c9ef8_metesdb_tpurgent.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+
+

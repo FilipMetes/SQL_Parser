@@ -1,0 +1,9 @@
+metes
+
+obelix.fri.uniza.sk
+
+1521
+
+orcl
+
+D:\SQL_Parser\Wallet_METESDB
