@@ -13,21 +13,21 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="file://$MODULE_DIR$/oracle_jars" />
+          <root url="file://$MODULE_DIR$/libs/oracle_jars" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
-        <jarDirectory url="file://$MODULE_DIR$/oracle_jars" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/libs/oracle_jars" recursive="false" />
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="file://$MODULE_DIR$/javafx-sdk-25/lib" />
+          <root url="file://$MODULE_DIR$/libs/javafx-sdk-25/lib" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
-        <jarDirectory url="file://$MODULE_DIR$/javafx-sdk-25/lib" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/libs/javafx-sdk-25/lib" recursive="false" />
       </library>
     </orderEntry>
   </component>
