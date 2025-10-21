@@ -3,44 +3,43 @@ package database;
 import java.sql.*;
 
 public class Connect {
-    private Connection conn;
+    private String host;
+    private String port;
+    private String sid;
+    private String user;
+    private String password;
+    private String url;
 
     public Connect(String host, String port, String sid, String user, String password) {
-        // JDBC URL using SID
-        String url = "jdbc:oracle:thin:@" + host + ":" + port + ":" + sid;
+        this.host = host;
+        this.port = port;
+        this.sid = sid;
+        this.user = user;
+        this.password = password;
 
+        this.url = "jdbc:oracle:thin:@" + this.host + ":" + this.port + ":" + this.sid;
+    }
+
+    public boolean connect() {
         try {
-            this.conn = DriverManager.getConnection(url, user, password);
-            System.out.println("✅ Connected successfully without wallet!");
+            Connection conn = DriverManager.getConnection(this.url, this.user, this.password);
+            System.out.println("Connected successfully!");
 
-            try (Statement stmt = this.conn.createStatement()) {
+            try (Statement stmt = conn.createStatement()) {
 
-                // Execute query
                 String sql = "SELECT nazov_je, dostupnost FROM jed_list";
                 ResultSet rs = stmt.executeQuery(sql);
 
-                // Loop through results
                 while (rs.next()) {
                     String meno = rs.getString("nazov_je");
                     String priezvisko = rs.getString("dostupnost");
                     System.out.println(meno + " " + priezvisko);
                 }
             }
-
+            return true;
         } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Optional: method to close connection
-    public void close() {
-        try {
-            if (this.conn != null && !this.conn.isClosed()) {
-                this.conn.close();
-                System.out.println("Connection closed.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("Database connection failed: " + e.getMessage());
+            return false;
         }
     }
 

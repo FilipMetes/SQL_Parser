@@ -1,0 +1,2 @@
+Presmerovat funkcie ktora robi databaza v GUI do 
+connection tried v GUI nemaju co robit

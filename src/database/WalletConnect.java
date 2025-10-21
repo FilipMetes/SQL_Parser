@@ -9,39 +9,40 @@ import java.sql.Statement;
 public class WalletConnect {
     private String user;
     private String password;
-    private String walletPath; // or /opt/oracle/wallet_mydb
+    private String walletPath;
     private String tnsAlias;
-
+    private String url;
 
     public WalletConnect(String user, String password, String walletPath, String tnsAlias) {
-
         this.user = user;
         this.password = password;
         this.walletPath = walletPath;
         this. tnsAlias = tnsAlias;
 
-        String url = "jdbc:oracle:thin:@" + this.tnsAlias + "?TNS_ADMIN=" + this.walletPath;
-        try (Connection conn = DriverManager.getConnection(url, this.user, this.password)) {
+        this.url = "jdbc:oracle:thin:@" + this.tnsAlias + "?TNS_ADMIN=" + this.walletPath;
+    }
 
-            System.out.println("✅ Connected successfully! Welcome!!");
+    public boolean connect() {
+        try (Connection conn = DriverManager.getConnection(this.url, this.user, this.password)) {
 
-            // Create a Statement object
+            System.out.println("Connected successfully!");
+
             try (Statement stmt = conn.createStatement()) {
 
-                // Execute query
                 String sql = "SELECT meno, priezvisko FROM osoba";
                 ResultSet rs = stmt.executeQuery(sql);
 
-                // Loop through results
                 while (rs.next()) {
                     String meno = rs.getString("meno");
                     String priezvisko = rs.getString("priezvisko");
                     System.out.println(meno + " " + priezvisko);
                 }
             }
+            return true;
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("Database connection failed: " + e.getMessage());
+            return false;
         }
     }
 }

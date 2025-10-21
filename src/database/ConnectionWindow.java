@@ -10,9 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.w3c.dom.Text;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,10 +20,14 @@ public class ConnectionWindow extends Application {
     private final HBox footer;
     private final VBox root;
     private final Button submitButton;
+    private final Button walletConnection;
+    private final Button nonWalletConnection;
+    private final Button returnButton;
 
     public ConnectionWindow() {
         this.window = new VBox();
 
+        //Initialize main layout box
         this.root = new VBox(10);
         this.root.setFillWidth(false);
         this.root.setPadding(new Insets(0, 0, 0, 20));
@@ -35,44 +37,44 @@ public class ConnectionWindow extends Application {
         this.header = new HBox();
         this.footer = new HBox();
 
+        //Add root, footer, and header to the window
         this.window.getChildren().addAll(this.header, new Separator(), this.root, new Separator(), this.footer);
 
+        //Initialize submitButton
         this.submitButton = new Button("Connect"); //submit button
         this.footer.getChildren().addAll(this.submitButton);
         HBox.setMargin(this.submitButton, new Insets(10, 20, 10, 10));
+
+        //Initialize connection buttons
+        this.walletConnection = new Button("Connect with wallet");
+        this.nonWalletConnection = new Button("Connect without wallet");
+        this.returnButton = new Button("Return");
+        this.header.getChildren().addAll(this.nonWalletConnection, this.walletConnection, this.returnButton);
+        HBox.setMargin(this.nonWalletConnection, new Insets(5, 5, 10, 5));
+        HBox.setMargin(this.walletConnection, new Insets(5, 20, 10, 5));
+        HBox.setMargin(this.returnButton, new Insets(5, 10, 10, 10));
+        this.header.setAlignment(Pos.CENTER);
     }
     @Override
     public void start(Stage primaryStage) {
 
-        Button walletConnection = new Button("Connect with wallet");
-        Button nonWalletConnection = new Button("Connect without wallet");
-        Button returnButton = new Button("Return");
-
-        this.header.getChildren().addAll(nonWalletConnection, walletConnection, returnButton);
-
-        HBox.setMargin(nonWalletConnection, new Insets(5, 5, 10, 5)); // top, right, bottom, left
-        HBox.setMargin(walletConnection, new Insets(5, 20, 10, 5));
-        HBox.setMargin(returnButton, new Insets(5, 10, 10, 10));
-
-        this.header.setAlignment(Pos.CENTER);
-
-
-        returnButton.setOnAction(e -> {
+        //Button listeners
+        this.returnButton.setOnAction(e -> {
             this.footer.getChildren().removeIf(node -> node instanceof Label);
             this.clearRoot();
         });
 
-        walletConnection.setOnAction(e -> {
+        this.walletConnection.setOnAction(e -> {
             this.clearRoot();
             this.initializeWalletConnection();
         });
 
-        nonWalletConnection.setOnAction(e -> {
+        this.nonWalletConnection.setOnAction(e -> {
             this.clearRoot();
             this.initializeNonWalletConnection();
         });
 
-
+        //Display the connection Window
         Scene scene = new Scene(this.window, 400, 300);
 
         primaryStage.setTitle("SQL-Parser_DEMO");
@@ -100,11 +102,11 @@ public class ConnectionWindow extends Application {
         this.setRootComponents(25, 150);
 
         HashMap<String, TextInputControl> data =  new HashMap<>();
-        data.put("userHost", host);
-        data.put("userPort", port);
-        data.put("userSid", sid);
-        data.put("userUser", user);
-        data.put("userPassword", password);
+        data.put("inputHost", host);
+        data.put("inputPort", port);
+        data.put("inputSid", sid);
+        data.put("inputUser", user);
+        data.put("inputPassword", password);
 
         this.callSubmitButton(data, "nonWallet");
     }
@@ -120,10 +122,10 @@ public class ConnectionWindow extends Application {
         this.setRootComponents(25, 150);
 
         HashMap<String, TextInputControl> data =  new HashMap<>();
-        data.put("userUser", user);
-        data.put("userPassword", password);
-        data.put("userWalletPath", walletPath);
-        data.put("userTnsAlias", tnsAlias);
+        data.put("inputUser", user);
+        data.put("inputPassword", password);
+        data.put("inputWalletPath", walletPath);
+        data.put("inputTnsAlias", tnsAlias);
         this.callSubmitButton(data, "wallet");
 
 
@@ -152,54 +154,66 @@ public class ConnectionWindow extends Application {
     }
 
     public void callSubmitButton(HashMap<String, TextInputControl> data, String identificator) {
-        // Create a reusable "Empty lines" label
+
+        // Creating infoLabel label
         this.footer.getChildren().removeIf(node -> node instanceof Label);
-        Label emptyLinesWarning = new Label("Empty lines");
-        emptyLinesWarning.setStyle("-fx-text-fill: red");
+        Label infoLabel = new Label();
+        infoLabel.setStyle("-fx-text-fill: red");
 
-        // Let the label expand to fill the HBox space
-        HBox.setHgrow(emptyLinesWarning, Priority.ALWAYS);
-        emptyLinesWarning.setMaxWidth(Double.MAX_VALUE);
-        emptyLinesWarning.setMaxHeight(Double.MAX_VALUE);
+        //Editing infoLabel Label to fit the footer
+        HBox.setHgrow(infoLabel, Priority.ALWAYS);
+        infoLabel.setMaxWidth(Double.MAX_VALUE);
+        infoLabel.setMaxHeight(Double.MAX_VALUE);
+        infoLabel.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setMargin(infoLabel, new Insets(8, 10, 12, 10));
 
-// Align text inside the label to center
-        emptyLinesWarning.setAlignment(Pos.CENTER_RIGHT);
-
-// Optional: add padding/margin
-        HBox.setMargin(emptyLinesWarning, new Insets(8, 10, 12, 10));
-
+        //listener for submit button
         this.submitButton.setOnAction(e -> {
+            boolean isConnected = false;
             // Remove previous empty label if present
             this.footer.getChildren().removeIf(node -> node instanceof Label);
 
-            // Check for empty fields
+            // if there is any text field empty show an infoLabel label
             for (Map.Entry<String, TextInputControl> entry : data.entrySet()) {
                 if (entry.getValue().getText().isEmpty()) {
-                    this.footer.getChildren().add(emptyLinesWarning);
-                    return; // stop execution if any field is empty
+                    infoLabel.setText("Fill all fields!!");
+                    this.footer.getChildren().add(infoLabel);
+                    return;
                 }
             }
 
-            // All fields filled → proceed
+            // Opening a nonWallet connection
             if (identificator.equals("nonWallet")) {
-                String userHost = data.get("userHost").getText();
-                String userPort = data.get("userPort").getText();
-                String userSid = data.get("userSid").getText();
-                String userUser = data.get("userUser").getText();
-                String userPassword = data.get("userPassword").getText();
+                String inputHost = data.get("inputHost").getText();
+                String inputPort = data.get("inputPort").getText();
+                String inputSid = data.get("inputSid").getText();
+                String inputUser = data.get("inputUser").getText();
+                String inputPassword = data.get("inputPassword").getText();
 
-                Connect connect = new Connect(userHost, userPort, userSid, userUser, userPassword);
-
+                Connect nonWalletConnection = new Connect(inputHost, inputPort, inputSid, inputUser, inputPassword);
+                if (nonWalletConnection.connect()) {
+                    isConnected = true;
+                }
+            //Opening a wallet connection
             } else if (identificator.equals("wallet")) {
-                String userUser = data.get("userUser").getText();
-                String userPassword = data.get("userPassword").getText();
-                String userWalletPath = data.get("userWalletPath").getText();
-                String userTnsAlias = data.get("userTnsAlias").getText();
+                String inputUser = data.get("inputUser").getText();
+                String inputPassword = data.get("inputPassword").getText();
+                String inputWalletPath = data.get("inputWalletPath").getText();
+                String inputTnsAlias = data.get("inputTnsAlias").getText();
 
-                WalletConnect walletConnect = new WalletConnect(userUser, userPassword, userWalletPath, userTnsAlias);
+                WalletConnect walletConnection = new WalletConnect(inputUser, inputPassword, inputWalletPath, inputTnsAlias);
+                if (walletConnection.connect()) {
+                    isConnected = true;
+                }
             }
 
-            // Clear the root (hide the form)
+            if (isConnected) {
+                infoLabel.setText("Connected");
+            } else {
+                infoLabel.setText("Error!!");
+            }
+            this.footer.getChildren().add(infoLabel);
+
             this.root.getChildren().clear();
         });
     }
