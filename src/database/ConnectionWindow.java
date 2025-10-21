@@ -169,6 +169,11 @@ public class ConnectionWindow extends Application {
 
         //listener for submit button
         this.submitButton.setOnAction(e -> {
+
+            if (this.root.getChildren().isEmpty()) {
+                return;
+            }
+
             boolean isConnected = false;
             // Remove previous empty label if present
             this.footer.getChildren().removeIf(node -> node instanceof Label);
