@@ -2,7 +2,7 @@ package database;
 
 import java.sql.*;
 
-public class Connect {
+public class NonWalletConnect {
     private String host;
     private String port;
     private String sid;
@@ -10,7 +10,7 @@ public class Connect {
     private String password;
     private String url;
 
-    public Connect(String host, String port, String sid, String user, String password) {
+    public NonWalletConnect(String host, String port, String sid, String user, String password) {
         this.host = host;
         this.port = port;
         this.sid = sid;

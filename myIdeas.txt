@@ -2,3 +2,6 @@ Presmerovat funkcie ktora robi databaza v GUI do
 connection tried v GUI nemaju co robit
 
 poslat pole inputov connection classam
+
+pridat logo na ster
+pri pripojovani na pravu stranu VBoxu

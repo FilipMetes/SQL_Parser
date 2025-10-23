@@ -5,12 +5,21 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.awt.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,8 +32,9 @@ public class ConnectionWindow extends Application {
     private final Button walletConnection;
     private final Button nonWalletConnection;
     private final Button returnButton;
+    private ImageView imageView;
 
-    public ConnectionWindow() {
+    public ConnectionWindow() throws FileNotFoundException {
         this.window = new VBox();
 
         //Initialize main layout box
@@ -39,6 +49,16 @@ public class ConnectionWindow extends Application {
 
         //Add root, footer, and header to the window
         this.window.getChildren().addAll(this.header, new Separator(), this.root, new Separator(), this.footer);
+
+        //Adding a logo to the root
+        Image logo = new Image(new FileInputStream("Logo.png"));
+        this.imageView = new ImageView(logo);
+        this.imageView.setFitWidth(250);
+        this.imageView.setPreserveRatio(true);
+
+        // Add the imageContainer to VBox
+        this.imageView.setTranslateX(55);
+        this.root.getChildren().add(this.imageView);
 
         //Initialize submitButton
         this.submitButton = new Button("Connect"); //submit button
@@ -62,6 +82,7 @@ public class ConnectionWindow extends Application {
         this.returnButton.setOnAction(e -> {
             this.footer.getChildren().removeIf(node -> node instanceof Label);
             this.clearRoot();
+            this.root.getChildren().add(this.imageView);
         });
 
         this.walletConnection.setOnAction(e -> {
@@ -119,6 +140,7 @@ public class ConnectionWindow extends Application {
         TextArea tnsAlias = this.createTextArea("tns_Alias");
 
         this.root.getChildren().addAll(user, password, walletPath, tnsAlias);
+
         this.setRootComponents(25, 150);
 
         HashMap<String, TextInputControl> data =  new HashMap<>();
@@ -195,7 +217,7 @@ public class ConnectionWindow extends Application {
                 String inputUser = data.get("inputUser").getText();
                 String inputPassword = data.get("inputPassword").getText();
 
-                Connect nonWalletConnection = new Connect(inputHost, inputPort, inputSid, inputUser, inputPassword);
+                NonWalletConnect nonWalletConnection = new NonWalletConnect(inputHost, inputPort, inputSid, inputUser, inputPassword);
                 if (nonWalletConnection.connect()) {
                     isConnected = true;
                 }

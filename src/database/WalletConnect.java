@@ -12,7 +12,7 @@ public class WalletConnect {
     private String walletPath;
     private String tnsAlias;
     private String url;
-
+    
     public WalletConnect(String user, String password, String walletPath, String tnsAlias) {
         this.user = user;
         this.password = password;
