@@ -9,7 +9,6 @@ import javafx.scene.image.Image;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -17,7 +16,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
@@ -58,6 +56,7 @@ public class ConnectionWindow extends Application {
 
         // Add the imageContainer to VBox
         this.imageView.setTranslateX(55);
+        //this.root.setAlignment(Pos.CENTER);
         this.root.getChildren().add(this.imageView);
 
         //Initialize submitButton
@@ -97,7 +96,6 @@ public class ConnectionWindow extends Application {
 
         //Display the connection Window
         Scene scene = new Scene(this.window, 400, 300);
-
         primaryStage.setTitle("SQL-Parser_DEMO");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -110,6 +108,29 @@ public class ConnectionWindow extends Application {
 
         return textArea;
     }
+
+    public void setRootComponents(int height, int width) {
+        for (Node node : this.root.getChildren()) {
+            if (node instanceof Button) {
+                continue;
+            } else if (node instanceof PasswordField) {
+                ((PasswordField) node).setMinHeight(20);
+                ((PasswordField) node).setPrefHeight(height + 2);
+                continue;
+            }
+            var textField = ((TextInputControl) node);
+            textField.setMinHeight(20);
+            textField.setPrefHeight(height);
+            textField.setPrefWidth(width);
+        }
+    }
+
+    public void clearRoot() {
+        if (!this.root.getChildren().isEmpty()) {
+            this.root.getChildren().clear();
+        }
+    }
+
 
     public void initializeNonWalletConnection() {
         TextArea host = this.createTextArea("Host");
@@ -153,28 +174,6 @@ public class ConnectionWindow extends Application {
 
     }
 
-    public void clearRoot() {
-        if (!this.root.getChildren().isEmpty()) {
-            this.root.getChildren().clear();
-        }
-    }
-
-    public void setRootComponents(int height, int width) {
-        for (Node node : this.root.getChildren()) {
-            if (node instanceof Button) {
-                continue;
-            } else if (node instanceof PasswordField) {
-                ((PasswordField) node).setMinHeight(20);
-                ((PasswordField) node).setPrefHeight(height + 2);
-                continue;
-            }
-            var textField = ((TextInputControl) node);
-            textField.setMinHeight(20);
-            textField.setPrefHeight(height);
-            textField.setPrefWidth(width);
-        }
-    }
-
     public void callSubmitButton(HashMap<String, TextInputControl> data, String identificator) {
 
         // Creating infoLabel label
@@ -200,7 +199,7 @@ public class ConnectionWindow extends Application {
             // Remove previous empty label if present
             this.footer.getChildren().removeIf(node -> node instanceof Label);
 
-            // if there is any text field empty show an infoLabel label
+            // if there is any text field empty show an infoLabel
             for (Map.Entry<String, TextInputControl> entry : data.entrySet()) {
                 if (entry.getValue().getText().isEmpty()) {
                     infoLabel.setText("Fill all fields!!");
