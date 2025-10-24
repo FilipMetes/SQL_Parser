@@ -1,6 +1,9 @@
 package database;
 
+import javafx.scene.control.TextInputControl;
+
 import java.sql.*;
+import java.util.HashMap;
 
 public class NonWalletConnect {
     private String host;
@@ -9,13 +12,16 @@ public class NonWalletConnect {
     private String user;
     private String password;
     private String url;
+    private HashMap<String, TextInputControl> data;
 
-    public NonWalletConnect(String host, String port, String sid, String user, String password) {
-        this.host = host;
-        this.port = port;
-        this.sid = sid;
-        this.user = user;
-        this.password = password;
+    public NonWalletConnect(HashMap<String, TextInputControl> data) {
+        this.data = data;
+
+        this.host = data.get("inputHost").getText();
+        this.port = data.get("inputPort").getText();
+        this.sid = data.get("inputSid").getText();
+        this.user = data.get("inputUser").getText();
+        this.password = data.get("inputPassword").getText();
 
         this.url = "jdbc:oracle:thin:@" + this.host + ":" + this.port + ":" + this.sid;
     }

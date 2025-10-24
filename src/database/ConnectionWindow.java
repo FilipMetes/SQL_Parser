@@ -5,11 +5,13 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextInputControl;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -25,10 +27,12 @@ public class ConnectionWindow extends Application {
     private final VBox window;
     private final HBox header;
     private final HBox footer;
-    private final VBox root;
+    private final HBox root;
+    private final VBox leftRoot;
+    private final VBox rightRoot;
     private final Button submitButton;
-    private final Button walletConnection;
-    private final Button nonWalletConnection;
+    private final Button walletButton;
+    private final Button nonWalletButton;
     private final Button returnButton;
     private ImageView imageView;
 
@@ -36,11 +40,17 @@ public class ConnectionWindow extends Application {
         this.window = new VBox();
 
         //Initialize main layout box
-        this.root = new VBox(10);
-        this.root.setFillWidth(false);
+        this.root = new HBox(10);
         this.root.setPadding(new Insets(0, 0, 0, 20));
-        VBox.setVgrow(this.root, javafx.scene.layout.Priority.ALWAYS);
-        VBox.setMargin(this.root, new Insets(10, 10 , 10, 5));
+        this.root.setAlignment(Pos.CENTER);
+        VBox.setVgrow(this.root, Priority.ALWAYS);
+
+        //initializing root boxes
+        this.leftRoot = new VBox();
+        this.rightRoot = new VBox();
+        this.leftRoot.setAlignment(Pos.CENTER);
+        this.leftRoot.setSpacing(10);
+        this.rightRoot.setAlignment(Pos.CENTER);
 
         this.header = new HBox();
         this.footer = new HBox();
@@ -55,8 +65,6 @@ public class ConnectionWindow extends Application {
         this.imageView.setPreserveRatio(true);
 
         // Add the imageContainer to VBox
-        this.imageView.setTranslateX(55);
-        //this.root.setAlignment(Pos.CENTER);
         this.root.getChildren().add(this.imageView);
 
         //Initialize submitButton
@@ -65,12 +73,12 @@ public class ConnectionWindow extends Application {
         HBox.setMargin(this.submitButton, new Insets(10, 20, 10, 10));
 
         //Initialize connection buttons
-        this.walletConnection = new Button("Connect with wallet");
-        this.nonWalletConnection = new Button("Connect without wallet");
+        this.walletButton = new Button("Connect with wallet");
+        this.nonWalletButton = new Button("Connect without wallet");
         this.returnButton = new Button("Return");
-        this.header.getChildren().addAll(this.nonWalletConnection, this.walletConnection, this.returnButton);
-        HBox.setMargin(this.nonWalletConnection, new Insets(5, 5, 10, 5));
-        HBox.setMargin(this.walletConnection, new Insets(5, 20, 10, 5));
+        this.header.getChildren().addAll(this.nonWalletButton, this.walletButton, this.returnButton);
+        HBox.setMargin(this.nonWalletButton, new Insets(5, 5, 10, 5));
+        HBox.setMargin(this.walletButton, new Insets(5, 20, 10, 5));
         HBox.setMargin(this.returnButton, new Insets(5, 10, 10, 10));
         this.header.setAlignment(Pos.CENTER);
     }
@@ -81,17 +89,20 @@ public class ConnectionWindow extends Application {
         this.returnButton.setOnAction(e -> {
             this.footer.getChildren().removeIf(node -> node instanceof Label);
             this.clearRoot();
+            this.imageView.setFitWidth(250);
             this.root.getChildren().add(this.imageView);
         });
 
-        this.walletConnection.setOnAction(e -> {
+        this.walletButton.setOnAction(e -> {
             this.clearRoot();
-            this.initializeWalletConnection();
+            this.root.getChildren().addAll(this.leftRoot, this.rightRoot);
+            this.initializeNonWalletWindow();
         });
 
-        this.nonWalletConnection.setOnAction(e -> {
+        this.nonWalletButton.setOnAction(e -> {
             this.clearRoot();
-            this.initializeNonWalletConnection();
+            this.root.getChildren().addAll(this.leftRoot, this.rightRoot);
+            this.initializeWalletWindow();
         });
 
         //Display the connection Window
@@ -110,29 +121,28 @@ public class ConnectionWindow extends Application {
     }
 
     public void setRootComponents(int height, int width) {
-        for (Node node : this.root.getChildren()) {
-            if (node instanceof Button) {
-                continue;
-            } else if (node instanceof PasswordField) {
-                ((PasswordField) node).setMinHeight(20);
-                ((PasswordField) node).setPrefHeight(height + 2);
-                continue;
+        for (Node node : this.leftRoot.getChildren()) {
+            if (node instanceof PasswordField passwordField) {
+                passwordField.setMinHeight(20);
+                passwordField.setPrefHeight(height + 2);
+            } else if (node instanceof TextInputControl textField) {
+                textField.setMinHeight(20);
+                textField.setPrefHeight(height);
+                textField.setPrefWidth(width);
             }
-            var textField = ((TextInputControl) node);
-            textField.setMinHeight(20);
-            textField.setPrefHeight(height);
-            textField.setPrefWidth(width);
         }
     }
 
     public void clearRoot() {
         if (!this.root.getChildren().isEmpty()) {
             this.root.getChildren().clear();
+            this.leftRoot.getChildren().clear();
+            this.rightRoot.getChildren().clear();
         }
     }
 
 
-    public void initializeNonWalletConnection() {
+    public void initializeWalletWindow() {
         TextArea host = this.createTextArea("Host");
         TextArea port = this.createTextArea("Port");
         TextArea sid = this.createTextArea("Sid");
@@ -140,7 +150,10 @@ public class ConnectionWindow extends Application {
         PasswordField password = new PasswordField();
         password.setPromptText("Password");
 
-        this.root.getChildren().addAll(user, password, host, port, sid);
+        //adding textfield to leftroot and image to right root
+        this.leftRoot.getChildren().addAll(user, password, host, port, sid);
+        this.rightRoot.getChildren().add(this.imageView);
+        this.imageView.setFitWidth(150);
         this.setRootComponents(25, 150);
 
         HashMap<String, TextInputControl> data =  new HashMap<>();
@@ -153,15 +166,17 @@ public class ConnectionWindow extends Application {
         this.callSubmitButton(data, "nonWallet");
     }
 
-    public void initializeWalletConnection() {
+    public void initializeNonWalletWindow() {
         TextArea user = this.createTextArea("User");
         PasswordField password = new PasswordField();
         password.setPromptText("Password");
         TextArea walletPath = this.createTextArea("WalletPath");
         TextArea tnsAlias = this.createTextArea("tns_Alias");
 
-        this.root.getChildren().addAll(user, password, walletPath, tnsAlias);
-
+        //adding textfield to leftroot and image to right root
+        this.leftRoot.getChildren().addAll(user, password, walletPath, tnsAlias);
+        this.rightRoot.getChildren().add(this.imageView);
+        this.imageView.setFitWidth(150);
         this.setRootComponents(25, 150);
 
         HashMap<String, TextInputControl> data =  new HashMap<>();
@@ -191,13 +206,14 @@ public class ConnectionWindow extends Application {
         //listener for submit button
         this.submitButton.setOnAction(e -> {
 
-            if (this.root.getChildren().isEmpty()) {
+            if (this.leftRoot.getChildren().isEmpty()) {
                 return;
             }
 
-            boolean isConnected = false;
             // Remove previous empty label if present
             this.footer.getChildren().removeIf(node -> node instanceof Label);
+
+            boolean isConnected = false;
 
             // if there is any text field empty show an infoLabel
             for (Map.Entry<String, TextInputControl> entry : data.entrySet()) {
@@ -210,24 +226,14 @@ public class ConnectionWindow extends Application {
 
             // Opening a nonWallet connection
             if (identificator.equals("nonWallet")) {
-                String inputHost = data.get("inputHost").getText();
-                String inputPort = data.get("inputPort").getText();
-                String inputSid = data.get("inputSid").getText();
-                String inputUser = data.get("inputUser").getText();
-                String inputPassword = data.get("inputPassword").getText();
-
-                NonWalletConnect nonWalletConnection = new NonWalletConnect(inputHost, inputPort, inputSid, inputUser, inputPassword);
+                NonWalletConnect nonWalletConnection = new NonWalletConnect(data);
                 if (nonWalletConnection.connect()) {
                     isConnected = true;
                 }
             //Opening a wallet connection
             } else if (identificator.equals("wallet")) {
-                String inputUser = data.get("inputUser").getText();
-                String inputPassword = data.get("inputPassword").getText();
-                String inputWalletPath = data.get("inputWalletPath").getText();
-                String inputTnsAlias = data.get("inputTnsAlias").getText();
 
-                WalletConnect walletConnection = new WalletConnect(inputUser, inputPassword, inputWalletPath, inputTnsAlias);
+                WalletConnect walletConnection = new WalletConnect(data);
                 if (walletConnection.connect()) {
                     isConnected = true;
                 }
@@ -239,8 +245,8 @@ public class ConnectionWindow extends Application {
                 infoLabel.setText("Error!!");
             }
             this.footer.getChildren().add(infoLabel);
-
-            this.root.getChildren().clear();
+            //clearing root after connectino
+            this.clearRoot();
         });
     }
 }

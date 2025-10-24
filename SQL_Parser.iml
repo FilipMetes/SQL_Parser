@@ -10,24 +10,35 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library" exported="">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="file://$MODULE_DIR$/../libs/oracle_jars" />
+          <root url="file://$USER_HOME$/libs/oracle_jars" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
-        <jarDirectory url="file://$MODULE_DIR$/../libs/oracle_jars" recursive="false" />
+        <jarDirectory url="file://$USER_HOME$/libs/oracle_jars" recursive="false" />
       </library>
     </orderEntry>
-    <orderEntry type="module-library" exported="">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="file://$MODULE_DIR$/../libs/javafx-sdk-25/lib" />
+          <root url="file://$USER_HOME$/libs/javafx-sdk-25/lib" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
-        <jarDirectory url="file://$MODULE_DIR$/../libs/javafx-sdk-25/lib" recursive="false" />
+        <jarDirectory url="file://$USER_HOME$/libs/javafx-sdk-25/lib" recursive="false" />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" exported="" name="ojdbc17-full" level="project" />
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="file://$USER_HOME$/Downloads/openjfx-25_windows-x64_bin-sdk/javafx-sdk-25/lib" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://$USER_HOME$/Downloads/openjfx-25_windows-x64_bin-sdk/javafx-sdk-25/lib" recursive="false" />
       </library>
     </orderEntry>
   </component>

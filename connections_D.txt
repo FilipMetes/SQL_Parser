@@ -6,4 +6,4 @@ obelix.fri.uniza.sk
 
 orcl
 
-D:\SQL_Parser\Wallet_METESDB
+C:/Users/M3T3S4K/Downloads/Wallet_METESDB

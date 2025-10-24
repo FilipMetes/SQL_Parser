@@ -1,10 +1,13 @@
 package database;
 
+import javafx.scene.control.TextInputControl;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.HashMap;
 
 public class WalletConnect {
     private String user;
@@ -12,12 +15,13 @@ public class WalletConnect {
     private String walletPath;
     private String tnsAlias;
     private String url;
+    private HashMap<String, TextInputControl> data;
     
-    public WalletConnect(String user, String password, String walletPath, String tnsAlias) {
-        this.user = user;
-        this.password = password;
-        this.walletPath = walletPath;
-        this. tnsAlias = tnsAlias;
+    public WalletConnect(HashMap<String, TextInputControl> data) {
+        this.user = data.get("inputUser").getText();
+        this.password = data.get("inputPassword").getText();
+        this.walletPath = data.get("inputWalletPath").getText();
+        this.tnsAlias = data.get("inputTnsAlias").getText();
 
         this.url = "jdbc:oracle:thin:@" + this.tnsAlias + "?TNS_ADMIN=" + this.walletPath;
     }
